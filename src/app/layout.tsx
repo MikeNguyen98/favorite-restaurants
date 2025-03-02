@@ -4,6 +4,9 @@ import "./globals.css";
 import { TRPCProvider } from "@/lib/trpc-provider";
 import Layout from "@/components/layout/Layout";
 
+import "swiper/css";
+import "swiper/css/pagination";
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
