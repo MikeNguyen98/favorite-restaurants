@@ -11,6 +11,7 @@ import CategoryFilter from "./sections/CategoryFilter";
 import EmptyState from "./sections/EmptyState";
 import SearchBar from "./sections/SearchBar";
 import LoadingIndicator from "@/components/Loading/LoadingIndicator";
+import { cn } from "@/utils";
 
 const RestaurantList = () => {
   const [selectedCategory, setSelectedCategory] = useState<STORE_CATEGORY>(
@@ -121,15 +122,15 @@ const RestaurantList = () => {
 
       {/* Restaurant List */}
       <div className="px-1 sm:px-2 pb-4 h-[calc(100dvh-162px)] sm:h-[calc(100dvh-200px)] overflow-auto">
-        {restaurants.length === 0 ? (
-          <EmptyState />
-        ) : (
+        {restaurants.length === 0 && <EmptyState />}
+
+        <div className={cn(restaurants.length === 0 && "hidden")}>
           <RestaurantItem
             restaurants={restaurants}
             onClick={handleRestaurantClick}
             toggleFavorite={toggleFavorite}
           />
-        )}
+        </div>
 
         {/* Loading indicator and sentinel for infinite scrolling */}
         <div id="load-more-sentinel" className="h-10 w-full">
