@@ -28,4 +28,4 @@ const CategoryFilter = ({
   </div>
 );
 
-export default CategoryFilter
+export default CategoryFilter;

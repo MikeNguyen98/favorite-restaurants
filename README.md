@@ -1,6 +1,6 @@
 # Favorite Restaurants
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Favorite Restaurants is a web application that allows users to save, manage, and explore their favorite restaurants. Built with Next.js, it offers a smooth and efficient user experience.
 
 ## Getting Started
 
@@ -63,6 +63,12 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
+## Usage
+
+- Users can add restaurants to their favorites list.
+- View details of favorite restaurants.
+- Manage and remove restaurants from the list.
+
 ## Building for Production
 
 To build and start the application in production mode:
@@ -83,6 +89,8 @@ To deploy manually, use:
 ```bash
 vercel
 ```
+
+This application is automatically deployed on Vercel whenever changes are pushed to the main branch.
 
 ## Learn More
 

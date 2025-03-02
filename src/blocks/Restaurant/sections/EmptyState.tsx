@@ -6,4 +6,4 @@ const EmptyState = () => (
     </p>
   </div>
 );
-export default EmptyState
+export default EmptyState;
