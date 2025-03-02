@@ -95,7 +95,7 @@ const RestaurantItem: React.FC<RestaurantItemProps> = ({
             </div>
             <div className="flex justify-between items-start">
               <div className="max-w-[80%]">
-                <h2 className="text-sm sm:text-base font-semibold line-clamp-1">
+                <h2 className="text-sm sm:text-base font-semibold line-clamp-1 text-black">
                   {r.name}
                 </h2>
               </div>
@@ -104,9 +104,11 @@ const RestaurantItem: React.FC<RestaurantItemProps> = ({
                   <span className="text-yellow-400 mr-1">
                     <StarIcon />
                   </span>
-                  <span className="font-medium">{r.rating || "-"}</span>
-                  <span className="text-gray-400 ml-1">
-                    {r.rating ? `(${r.rating_count || 0})` : "(No ratings)"}
+                  <span className="font-medium text-black">
+                    {r.rating || "-"}
+                  </span>
+                  <span className="text-black">
+                    {r.rating ? `(${r.rating_count || 0})` : "(0)"}
                   </span>
                 </span>
               </div>
