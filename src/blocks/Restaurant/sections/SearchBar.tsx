@@ -14,7 +14,7 @@ const SearchBar = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="맛집 이름을 검색해보세요"
-        className="w-full p-2 sm:p-3 pl-8 sm:pl-10 text-sm border rounded-xl sm:rounded-2xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-orange-300 focus:outline-none transition"
+        className="w-full p-2 sm:p-3 pl-8 sm:pl-10 text-sm text-black border rounded-xl sm:rounded-2xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-orange-300 focus:outline-none transition"
         aria-label="Search restaurants"
       />
       <span className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
