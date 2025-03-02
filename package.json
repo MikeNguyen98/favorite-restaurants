@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "license": "MIT",
   "dependencies": {
     "@prisma/client": "^6.4.1",
     "@tanstack/react-query": "^4.36.1",
