@@ -106,7 +106,11 @@ const RestaurantList = () => {
       {/* Header */}
       <div className="sticky top-0 z-10 bg-white shadow-sm">
         {/* Search Bar */}
-        <SearchBar value={searchQuery} onChange={(e) => setSearchQuery(e)} />
+        <SearchBar
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e)}
+          onClear={() => setSearchQuery("")}
+        />
 
         {/* Categories */}
         <CategoryFilter
@@ -120,7 +124,11 @@ const RestaurantList = () => {
         {restaurants.length === 0 ? (
           <EmptyState />
         ) : (
-          <RestaurantItem restaurants={restaurants} onClick={handleRestaurantClick} toggleFavorite={toggleFavorite}/>
+          <RestaurantItem
+            restaurants={restaurants}
+            onClick={handleRestaurantClick}
+            toggleFavorite={toggleFavorite}
+          />
         )}
 
         {/* Loading indicator and sentinel for infinite scrolling */}

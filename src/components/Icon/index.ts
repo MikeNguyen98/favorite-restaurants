@@ -6,6 +6,7 @@ import { default as SearchIcon } from "./SearchIcon";
 import { default as ChatIcon } from ".//ChatIcon";
 import { default as BookingIcon } from "./BookingIcon";
 import { default as MenuIcon } from "./MenuIcon";
+import { default as CloseIcon } from "./CloseIcon";
 
 export {
   StarIcon,
@@ -16,4 +17,5 @@ export {
   ChatIcon,
   BookingIcon,
   MenuIcon,
+  CloseIcon,
 };
