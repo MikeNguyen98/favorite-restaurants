@@ -120,7 +120,7 @@ const RestaurantList = () => {
       </div>
 
       {/* Restaurant List */}
-      <div className="px-1 sm:px-2 pb-4 h-[calc(100dvh-180px)] sm:h-[calc(100dvh-200px)]">
+      <div className="px-1 sm:px-2 pb-4 h-[calc(100dvh-162px)] sm:h-[calc(100dvh-200px)] overflow-auto">
         {restaurants.length === 0 ? (
           <EmptyState />
         ) : (
