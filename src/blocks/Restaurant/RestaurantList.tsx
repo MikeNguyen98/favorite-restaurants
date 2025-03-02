@@ -1,7 +1,9 @@
 "use client";
 
+import LoadingIndicator from "@/components/Loading/LoadingIndicator";
 import { trpc } from "@/lib/trpc";
 import { STORE_CATEGORY } from "@/types/categoryType";
+import { cn } from "@/utils";
 import { PAGE_SIZE } from "@/utils/constants";
 import { isEmpty, uniqBy } from "lodash";
 import { useEffect, useState } from "react";
@@ -10,8 +12,6 @@ import RestaurantItem from "./RestaurantItem";
 import CategoryFilter from "./sections/CategoryFilter";
 import EmptyState from "./sections/EmptyState";
 import SearchBar from "./sections/SearchBar";
-import LoadingIndicator from "@/components/Loading/LoadingIndicator";
-import { cn } from "@/utils";
 
 const RestaurantList = () => {
   const [selectedCategory, setSelectedCategory] = useState<STORE_CATEGORY>(
@@ -103,7 +103,7 @@ const RestaurantList = () => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto bg-white">
+    <div className="w-full max-w-2xl mx-auto bg-white relative">
       {/* Header */}
       <div className="sticky top-0 z-10 bg-white shadow-sm">
         {/* Search Bar */}

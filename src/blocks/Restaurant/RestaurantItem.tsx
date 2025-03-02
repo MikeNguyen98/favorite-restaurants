@@ -52,6 +52,7 @@ const RestaurantItem: React.FC<RestaurantItemProps> = ({
                       alt={r.name || "Restaurant image"}
                       fill
                       className="rounded-lg sm:rounded-2xl object-cover"
+                      sizes="(max-width: 768px) 100vw, 50vw"
                       loading="lazy"
                       onError={(e) => {
                         e.currentTarget.src = "/assets/fallbackImage.png";
