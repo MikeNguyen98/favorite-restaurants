@@ -30,7 +30,7 @@ const RestaurantList = () => {
         category:
           selectedCategory !== STORE_CATEGORY.ALL
             ? selectedCategory
-            : undefined,
+            : null,
         keyword: debouncedSearchQuery,
       },
       {
@@ -41,6 +41,7 @@ const RestaurantList = () => {
   // Handle category change
   const handleCategoryChange = (category: STORE_CATEGORY) => {
     setSelectedCategory(category);
+    // setRestaurants([]);
   };
 
   useEffect(() => {
@@ -82,10 +83,6 @@ const RestaurantList = () => {
     };
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  // Reset data when search or category changes
-  useEffect(() => {
-    setRestaurants([]);
-  }, [debouncedSearchQuery, selectedCategory]);
   const handleRestaurantClick = (id: string) => {
     console.log(`Navigate to restaurant details page for ID: ${id}`);
     // Add navigation implementation here
