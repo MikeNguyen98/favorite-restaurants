@@ -45,7 +45,7 @@ export const appRouter = router({
         nextCursor,
       };
     }),
-  favoriteRestaurant: publicProcedure
+  addFavorite: publicProcedure
     .input(
       z.object({
         id: z.string(),
