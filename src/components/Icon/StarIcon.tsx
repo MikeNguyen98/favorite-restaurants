@@ -1,12 +1,6 @@
 import * as React from "react";
 
-export default function StarIcon({
-  stroke,
-  className,
-}: {
-  stroke?: string;
-  className?: string;
-}) {
+export default function StarIcon() {
   return (
     <svg
       width="16"
