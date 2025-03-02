@@ -121,16 +121,18 @@ const RestaurantList = () => {
       </div>
 
       {/* Restaurant List */}
-      <div className="px-1 sm:px-2 pb-4 h-[calc(100dvh-162px)] sm:h-[calc(100dvh-200px)] overflow-auto">
-        {isEmpty(restaurants) && <EmptyState />}
-
-        <div className={cn(isEmpty(restaurants) ? "hidden" : "flex")}>
-          <RestaurantItem
-            restaurants={restaurants}
-            onClick={handleRestaurantClick}
-            toggleFavorite={toggleFavorite}
-          />
-        </div>
+      {isEmpty(restaurants) && <EmptyState />}
+      <div
+        className={cn(
+          "pb-4 h-[calc(100dvh-162px)] sm:h-[calc(100dvh-200px)]",
+          isEmpty(restaurants) ? "hidden" : "flex"
+        )}
+      >
+        <RestaurantItem
+          restaurants={restaurants}
+          onClick={handleRestaurantClick}
+          toggleFavorite={toggleFavorite}
+        />
 
         {/* Loading indicator and sentinel for infinite scrolling */}
         <div id="load-more-sentinel" className="h-10 w-full">
