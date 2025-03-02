@@ -28,9 +28,7 @@ const RestaurantList = () => {
       {
         limit: PAGE_SIZE,
         category:
-          selectedCategory !== STORE_CATEGORY.ALL
-            ? selectedCategory
-            : null,
+          selectedCategory !== STORE_CATEGORY.ALL ? selectedCategory : null,
         keyword: debouncedSearchQuery,
       },
       {
@@ -131,7 +129,7 @@ const RestaurantList = () => {
         onClick={() => handleRestaurantClick(r.id)}
       >
         <div className="flex flex-col gap-[12px]">
-          <div className="relative w-full h-[200px] mr-4 flex-shrink-0">
+          <div className="relative w-full h-[200px] mr-4 flex-shrink-0 bg-white/25 backdrop-blur-md">
             <Swiper
               pagination={true}
               modules={[Pagination]}
@@ -146,6 +144,12 @@ const RestaurantList = () => {
                       fill
                       className="rounded-lg sm:rounded-2xl object-cover"
                       loading="lazy"
+                      onError={(e) => {
+                        e.currentTarget.src = "/assets/fallbackImage.png";
+                        e.currentTarget.srcset = "/assets/fallbackImage.png";
+                        // Prevent potential infinite loop if fallback image also fails
+                        e.currentTarget.onerror = null;
+                      }}
                     />
                   </SwiperSlide>
                 ))
@@ -165,7 +169,7 @@ const RestaurantList = () => {
                 "p-[8px] absolute top-2 right-2 z-50 rounded-full",
                 r.isFavorite
                   ? "bg-[#FF692E]"
-                  : "shadow-lg bg-white bg-opacity-50"
+                  : "shadow-lg bg-white/25 backdrop-blur-md"
               )}
             >
               <HeartIcon />
