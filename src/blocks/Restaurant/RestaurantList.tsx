@@ -3,7 +3,7 @@
 import { trpc } from "@/lib/trpc";
 import { STORE_CATEGORY } from "@/types/categoryType";
 import { PAGE_SIZE } from "@/utils/constants";
-import { uniqBy } from "lodash";
+import { isEmpty, uniqBy } from "lodash";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import RestaurantItem from "./RestaurantItem";
@@ -122,9 +122,9 @@ const RestaurantList = () => {
 
       {/* Restaurant List */}
       <div className="px-1 sm:px-2 pb-4 h-[calc(100dvh-162px)] sm:h-[calc(100dvh-200px)] overflow-auto">
-        {restaurants.length === 0 && <EmptyState />}
+        {isEmpty(restaurants) && <EmptyState />}
 
-        <div className={cn(restaurants.length === 0 && "hidden")}>
+        <div className={cn(isEmpty(restaurants) ? "hidden" : "flex")}>
           <RestaurantItem
             restaurants={restaurants}
             onClick={handleRestaurantClick}
