@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { publicProcedure, router } from "./context";
 import { prisma } from "./db/prisma";
+
 export const appRouter = router({
   getRestaurants: publicProcedure
     .input(

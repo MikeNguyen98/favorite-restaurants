@@ -9,9 +9,9 @@ import { FixedSizeList as List } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 
 const RestaurantList = () => {
-  const [selectedCategory, setSelectedCategory] = useState<
-    STORE_CATEGORY | "전체"
-  >("전체");
+  const [selectedCategory, setSelectedCategory] = useState<STORE_CATEGORY>(
+    STORE_CATEGORY.ALL
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [favorites, setFavorites] = useState<{ [key: string]: boolean }>({});
 
@@ -19,14 +19,18 @@ const RestaurantList = () => {
     trpc.getRestaurants.useInfiniteQuery(
       {
         limit: PAGE_SIZE,
-        category: selectedCategory !== "전체" ? selectedCategory : undefined,
+        category:
+          selectedCategory !== STORE_CATEGORY.ALL
+            ? selectedCategory
+            : undefined,
       },
       {
         getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
       }
     );
 
-  const restaurants = data?.pages.flatMap((page) => page.restaurants) || [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const restaurants = data?.pages.flatMap((page: any) => page.restaurants) || [];
 
   // Better intersection observer implementation
   useEffect(() => {
@@ -161,16 +165,6 @@ const RestaurantList = () => {
         {/* Categories */}
         <div className="px-4 pb-4 overflow-x-auto scrollbar-hide">
           <div className="flex gap-2 whitespace-nowrap">
-            <button
-              onClick={() => setSelectedCategory("전체")}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors border border-gray-200 ${
-                selectedCategory === "전체"
-                  ? "bg-orange-500 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              전체
-            </button>
             {Object.values(STORE_CATEGORY).map((category) => (
               <button
                 key={category}

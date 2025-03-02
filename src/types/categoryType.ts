@@ -1,4 +1,5 @@
 export enum STORE_CATEGORY {
+  ALL = "ALL",
   SUSHI = "SUSHI",
   UNAGI = "UNAGI",
   TEMPURA = "TEMPURA",
@@ -24,6 +25,7 @@ export enum STORE_CATEGORY {
 
 // Category Text Mapping
 export const textByStoreCategory: Record<STORE_CATEGORY, string> = {
+  [STORE_CATEGORY.ALL]: "전체",
   [STORE_CATEGORY.SUSHI]: "스시·해산물",
   [STORE_CATEGORY.UNAGI]: "장어",
   [STORE_CATEGORY.TEMPURA]: "덴푸라",
