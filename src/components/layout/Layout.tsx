@@ -3,7 +3,7 @@ import Footer from "./Footer";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="flex flex-col min-h-screen overflow-hidden max-w-2xl mx-auto">
+    <div className="flex flex-col min-h-screen overflow-hidden max-w-2xl mx-auto border">
       <main className="flex-grow">{children}</main>
       {/* Footer */}
       <Footer />
