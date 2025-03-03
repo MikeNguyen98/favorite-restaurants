@@ -11,6 +11,7 @@ import EmptyState from "./sections/EmptyState";
 import SearchBar from "./sections/SearchBar";
 import { isEmpty } from "lodash";
 import { PAGE_SIZE } from "@/utils/constants";
+import Loading from "@/components/Loading/Loading";
 
 const RestaurantList = () => {
   const {
@@ -119,7 +120,13 @@ const RestaurantList = () => {
 
       {/* Restaurant List */}
       {isEmpty(restaurants) ? (
-        <EmptyState />
+        isFetching ? (
+          <div className="w-full h-full flex items-center justify-center">
+            <Loading stroke="#FF692E" />
+          </div>
+        ) : (
+          <EmptyState />
+        )
       ) : (
         <div className="h-[calc(100dvh-180px)] sm:h-[calc(100dvh-216px)] overflow-y-auto">
           {restaurants.map((restaurant) => (

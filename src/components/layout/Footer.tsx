@@ -10,7 +10,7 @@ const Footer = () => {
         </span>
         <span className="text-xs">홈</span>
       </button>
-      <button className="flex flex-col items-center text-orange-500">
+      <button className="flex flex-col items-center text-[#FF692E]">
         <span>
           <SearchIcon stroke="#FF4405" className="w-[24px] h-[24px]" />
         </span>
