@@ -128,7 +128,7 @@ const RestaurantList = () => {
       {isEmpty(restaurants) && <EmptyState />}
       <div
         className={cn(
-          "h-[calc(100dvh-162px)] sm:h-[calc(100dvh-200px)]",
+          "h-[calc(100dvh-216px)]",
           isEmpty(restaurants) ? "hidden" : "flex"
         )}
       >
