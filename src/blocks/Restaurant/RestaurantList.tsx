@@ -136,16 +136,39 @@ const RestaurantList = () => {
             </div>
           ))}
 
-          {/* Loading indicator - this is observed for intersection */}
+          {/* Loading indicator with transition */}
           <div
             ref={loaderRef}
-            className="py-4 text-center text-gray-500 text-sm"
+            className={`py-4 text-center text-gray-500 text-sm transition-opacity duration-300 ease-in-out ${
+              isFetching ? "opacity-100" : "opacity-0"
+            } ${
+              data?.hasNextPage || isFetching ? "h-12" : "h-0 overflow-hidden"
+            }`}
           >
-            {isFetching && "Loading more restaurants..."}
-            {!data?.hasNextPage &&
-              restaurants.length > 0 &&
-              "No more restaurants to load"}
+            {isFetching && (
+              <div className="flex items-center justify-center space-x-2">
+                <div
+                  className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                  style={{ animationDelay: "0ms" }}
+                ></div>
+                <div
+                  className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                  style={{ animationDelay: "150ms" }}
+                ></div>
+                <div
+                  className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                  style={{ animationDelay: "300ms" }}
+                ></div>
+              </div>
+            )}
           </div>
+
+          {/* End of results message */}
+          {!data?.hasNextPage && restaurants.length > 0 && (
+            <div className="py-4 text-center text-gray-500 text-sm transition-opacity duration-300 ease-in-out opacity-100">
+              You've seen all restaurants
+            </div>
+          )}
         </div>
       )}
     </div>
