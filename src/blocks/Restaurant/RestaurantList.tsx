@@ -1,20 +1,16 @@
 "use client";
 
-import LoadingIndicator from "@/components/Loading/LoadingIndicator";
 import { trpc } from "@/lib/trpc";
+import { useRestaurantStore } from "@/stores/useRestaurantStore";
 import { STORE_CATEGORY } from "@/types/categoryType";
-import { cn } from "@/utils";
-import { PAGE_SIZE } from "@/utils/constants";
-import { isEmpty } from "lodash";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
 import RestaurantItem from "./RestaurantItem";
 import CategoryFilter from "./sections/CategoryFilter";
 import EmptyState from "./sections/EmptyState";
 import SearchBar from "./sections/SearchBar";
-import AutoSizer from "react-virtualized-auto-sizer";
-import { FixedSizeList as List } from "react-window";
-import { useRestaurantStore } from "@/stores/useRestaurantStore";
+import { isEmpty } from "lodash";
+
 const RestaurantList = () => {
   const {
     restaurants,
@@ -28,10 +24,13 @@ const RestaurantList = () => {
 
   const [debouncedSearchQuery] = useDebounce(searchQuery, 300);
   const [page, setPage] = useState(1);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const loaderRef = useRef(null);
   const favoriteRestaurantMutation = trpc.addFavorite.useMutation();
+
   const { data, isFetching } = trpc.getRestaurants.useQuery(
     {
-      limit: PAGE_SIZE,
+      limit: 3,
       category:
         selectedCategory !== STORE_CATEGORY.ALL ? selectedCategory : null,
       keyword: debouncedSearchQuery,
@@ -48,17 +47,40 @@ const RestaurantList = () => {
       },
     }
   );
-  console.log("🚀 ~ RestaurantList ~ data:", data);
+
+  // Setup Intersection Observer for infinite scroll
+  useEffect(() => {
+    // Reset the observer when filters change
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting && data?.hasNextPage && !isFetching) {
+          setPage((prev) => prev + 1);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+
+    observerRef.current = observer;
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [data?.hasNextPage, isFetching]);
+
+  // Reset pagination when filters or search changes
+  useEffect(() => {
+    setPage(1);
+  }, [selectedCategory, debouncedSearchQuery]);
 
   const handleCategoryChange = (category: STORE_CATEGORY) => {
     setSelectedCategory(category);
-    setPage(1);
-  };
-
-  const handleLoadMore = () => {
-    if (data?.hasNextPage) {
-      setPage((prev) => prev + 1);
-    }
   };
 
   const handleToggleFavorite = async (
@@ -114,15 +136,16 @@ const RestaurantList = () => {
             </div>
           ))}
 
-          {/* Load More Button */}
-          {data?.hasNextPage && (
-            <button
-              onClick={handleLoadMore}
-              className="w-full py-3 mt-4 bg-gray-100 text-gray-800 rounded"
-            >
-              {isFetching ? "Loading..." : "Load More"}
-            </button>
-          )}
+          {/* Loading indicator - this is observed for intersection */}
+          <div
+            ref={loaderRef}
+            className="py-4 text-center text-gray-500 text-sm"
+          >
+            {isFetching && "Loading more restaurants..."}
+            {!data?.hasNextPage &&
+              restaurants.length > 0 &&
+              "No more restaurants to load"}
+          </div>
         </div>
       )}
     </div>
