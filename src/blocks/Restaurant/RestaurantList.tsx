@@ -167,7 +167,7 @@ const RestaurantList = () => {
           {/* End of results message */}
           {!data?.hasNextPage && restaurants.length > 0 && (
             <div className="py-4 text-center text-gray-500 text-sm transition-opacity duration-300 ease-in-out opacity-100">
-              You've seen all restaurants
+              You have seen all restaurants
             </div>
           )}
         </div>
