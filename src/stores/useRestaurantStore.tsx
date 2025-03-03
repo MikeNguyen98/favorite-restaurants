@@ -1,18 +1,20 @@
 import { create } from "zustand";
 import { uniqBy } from "lodash";
 import { STORE_CATEGORY } from "@/types/categoryType";
-import { trpc } from "@/lib/trpc";
 
 interface RestaurantState {
   restaurants: Restaurant[];
   selectedCategory: STORE_CATEGORY;
   searchQuery: string;
+  page: number;
 
   // Actions
-  setRestaurants: (restaurants: Restaurant[]) => void;
+  setRestaurants: (restaurants: Restaurant[], reset?: boolean) => void;
   appendRestaurants: (restaurants: Restaurant[]) => void;
   setSelectedCategory: (category: STORE_CATEGORY) => void;
   setSearchQuery: (query: string) => void;
+  nextPage: () => void;
+  resetPagination: () => void;
   toggleFavorite: (id: string) => void;
 }
 
@@ -20,8 +22,14 @@ export const useRestaurantStore = create<RestaurantState>((set) => ({
   restaurants: [],
   selectedCategory: STORE_CATEGORY.ALL,
   searchQuery: "",
+  page: 1,
 
-  setRestaurants: (restaurants: Restaurant[]) => set({ restaurants }),
+  setRestaurants: (restaurants: Restaurant[], reset = false) =>
+    set((state) => ({
+      restaurants: reset
+        ? restaurants
+        : uniqBy([...state.restaurants, ...restaurants], "id"),
+    })),
 
   appendRestaurants: (newRestaurants: Restaurant[]) =>
     set((state) => ({
@@ -29,9 +37,14 @@ export const useRestaurantStore = create<RestaurantState>((set) => ({
     })),
 
   setSelectedCategory: (category: STORE_CATEGORY) =>
-    set({ selectedCategory: category }),
+    set({ selectedCategory: category, restaurants: [], page: 1 }),
 
-  setSearchQuery: (query: string) => set({ searchQuery: query }),
+  setSearchQuery: (query: string) =>
+    set({ searchQuery: query, restaurants: [], page: 1 }),
+
+  nextPage: () => set((state) => ({ page: state.page + 1 })),
+
+  resetPagination: () => set({ page: 1, restaurants: [] }),
 
   toggleFavorite: (id: string) =>
     set((state) => ({

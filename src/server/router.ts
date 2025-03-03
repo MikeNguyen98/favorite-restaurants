@@ -7,43 +7,33 @@ export const appRouter = router({
     .input(
       z.object({
         limit: z.number().min(1).max(50).default(10),
-        cursor: z.string().nullish(), // cursor for pagination
-        category: z.string().nullish(), // filter by category
+        page: z.number().min(1).default(1), // Add page input
+        category: z.string().nullish(),
         keyword: z.string().optional(),
       })
     )
     .query(async ({ input }) => {
-      const { limit, cursor, category, keyword } = input;
+      const { limit, page, category, keyword } = input;
       const whereCondition: any = {};
 
-      // Add category filter if provided
-      if (category) {
-        whereCondition.category = category;
+      if (category) whereCondition.category = category;
+      if (keyword?.trim()) {
+        whereCondition.name = { contains: keyword, mode: "insensitive" };
       }
-      // Add search filter if provided
-      if (keyword && keyword.trim() !== "") {
-        whereCondition.name = {
-          contains: keyword,
-          mode: "insensitive",
-        };
-      }
+
       const restaurants = await prisma.restaurant.findMany({
-        take: limit + 1, // Fetch extra item to check if there's a next page
-        cursor: cursor ? { id: cursor } : undefined,
+        take: limit,
+        skip: (page - 1) * limit, // Use skip for pagination
         orderBy: { id: "asc" },
         where: whereCondition,
       });
 
-      let nextCursor: string | undefined = undefined;
-      if (restaurants.length > limit) {
-        const nextItem = restaurants.pop(); // Remove extra item and use its ID as cursor
-        nextCursor = nextItem?.id;
-      }
+      const totalCount = await prisma.restaurant.count({
+        where: whereCondition,
+      });
+      const hasNextPage = page * limit < totalCount;
 
-      return {
-        restaurants,
-        nextCursor,
-      };
+      return { restaurants, hasNextPage };
     }),
   addFavorite: publicProcedure
     .input(
