@@ -2,7 +2,7 @@ import { HomeIcon, SearchIcon, ChatIcon, BookingIcon, MenuIcon } from "../Icon";
 
 const Footer = () => {
   return (
-    <footer className="z-50  shadow-lg w-full max-w-2xl mx-auto bg-white border-t flex justify-around p-3">
+    <footer className="z-50 fixed bottom-0 shadow-lg w-full max-w-2xl mx-auto bg-white border-t flex justify-around p-3">
       {/* Bottom Navigation */}
       <button className="flex flex-col items-center text-gray-500">
         <span>

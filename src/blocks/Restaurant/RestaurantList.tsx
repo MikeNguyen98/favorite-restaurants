@@ -5,20 +5,29 @@ import { trpc } from "@/lib/trpc";
 import { STORE_CATEGORY } from "@/types/categoryType";
 import { cn } from "@/utils";
 import { PAGE_SIZE } from "@/utils/constants";
-import { isEmpty, uniqBy } from "lodash";
-import { useCallback, useEffect, useState } from "react";
+import { isEmpty } from "lodash";
+import { useCallback, useEffect } from "react";
 import { useDebounce } from "use-debounce";
 import RestaurantItem from "./RestaurantItem";
 import CategoryFilter from "./sections/CategoryFilter";
 import EmptyState from "./sections/EmptyState";
 import SearchBar from "./sections/SearchBar";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List } from "react-window";
+import { useRestaurantStore } from "@/stores/useRestaurantStore";
 
 const RestaurantList = () => {
-  const [selectedCategory, setSelectedCategory] = useState<STORE_CATEGORY>(
-    STORE_CATEGORY.ALL
-  );
-  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  // Use Zustand store instead of local state
+  const {
+    restaurants,
+    selectedCategory,
+    searchQuery,
+    setRestaurants,
+    setSelectedCategory,
+    setSearchQuery,
+    toggleFavorite,
+  } = useRestaurantStore();
+
   const [debouncedSearchQuery] = useDebounce(searchQuery, 300);
   const favoriteRestaurantMutation = trpc.addFavorite.useMutation();
 
@@ -41,17 +50,16 @@ const RestaurantList = () => {
 
   useEffect(() => {
     if (data?.pages) {
-      setRestaurants((prev: Restaurant[]) => {
-        if (data.pages.length === 1) {
-          return data.pages[0].restaurants;
-        }
-        return uniqBy(
-          [...prev, ...data.pages.flatMap((page: any) => page.restaurants)],
-          "id"
+      if (data.pages.length === 1) {
+        setRestaurants(data.pages[0].restaurants as any[]);
+      } else {
+        const allRestaurants = data.pages.flatMap(
+          (page: any) => page.restaurants
         );
-      });
+        setRestaurants(allRestaurants);
+      }
     }
-  }, [data]);
+  }, [data, setRestaurants]);
 
   const setupIntersectionObserver = useCallback(() => {
     if (!hasNextPage) return;
@@ -82,27 +90,27 @@ const RestaurantList = () => {
   const handleRestaurantClick = (id: string) => {
     console.log(`Navigate to restaurant details page for ID: ${id}`);
   };
-  const toggleFavorite = async (data: Restaurant, event: React.MouseEvent) => {
+
+  // Modified to use the Zustand store action
+  const handleToggleFavorite = async (
+    restaurant: Restaurant,
+    event: React.MouseEvent
+  ) => {
     event.stopPropagation();
 
     try {
-      setRestaurants((prevRestaurants) =>
-        prevRestaurants.map((r) =>
-          r.id === data.id ? { ...r, isFavorite: !r.isFavorite } : r
-        )
-      );
+      // Update state through Zustand
+      toggleFavorite(restaurant.id);
 
-      await favoriteRestaurantMutation.mutateAsync({
-        id: data.id,
-        isFavorite: !data.isFavorite,
+      // Call API
+      favoriteRestaurantMutation.mutate({
+        id: restaurant.id,
+        isFavorite: !restaurant.isFavorite,
       });
     } catch (error) {
       console.error("Error toggling favorite:", error);
-      setRestaurants((prevRestaurants) =>
-        prevRestaurants.map((r) =>
-          r.id === data.id ? { ...r, isFavorite: data.isFavorite } : r
-        )
-      );
+      // Revert the toggle in case of error
+      toggleFavorite(restaurant.id);
     }
   };
 
@@ -132,12 +140,34 @@ const RestaurantList = () => {
           isEmpty(restaurants) ? "hidden" : "flex"
         )}
       >
-        <RestaurantItem
-          restaurants={restaurants}
-          onClick={handleRestaurantClick}
-          toggleFavorite={toggleFavorite}
-        />
-
+        <AutoSizer>
+          {({ height, width }) => (
+            <List
+              height={height}
+              itemCount={restaurants.length}
+              itemSize={306}
+              width={width}
+            >
+              {({ index, style }) => {
+                const r = restaurants[index];
+                if (!r) return null;
+                return (
+                  <div
+                    key={r.id}
+                    style={style}
+                    className="p-3 shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer bg-white"
+                    onClick={() => handleRestaurantClick(r.id)}
+                  >
+                    <RestaurantItem
+                      restaurant={r}
+                      toggleFavorite={handleToggleFavorite}
+                    />
+                  </div>
+                );
+              }}
+            </List>
+          )}
+        </AutoSizer>
         {/* Loading indicator and sentinel for infinite scrolling */}
         <div id="load-more-sentinel" className="h-10 w-full">
           {isFetchingNextPage && <LoadingIndicator />}
