@@ -10,6 +10,7 @@ import CategoryFilter from "./sections/CategoryFilter";
 import EmptyState from "./sections/EmptyState";
 import SearchBar from "./sections/SearchBar";
 import { isEmpty } from "lodash";
+import { PAGE_SIZE } from "@/utils/constants";
 
 const RestaurantList = () => {
   const {
@@ -30,7 +31,7 @@ const RestaurantList = () => {
 
   const { data, isFetching } = trpc.getRestaurants.useQuery(
     {
-      limit: 3,
+      limit: PAGE_SIZE,
       category:
         selectedCategory !== STORE_CATEGORY.ALL ? selectedCategory : null,
       keyword: debouncedSearchQuery,
