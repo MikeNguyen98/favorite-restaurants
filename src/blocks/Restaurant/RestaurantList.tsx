@@ -6,7 +6,7 @@ import { STORE_CATEGORY } from "@/types/categoryType";
 import { cn } from "@/utils";
 import { PAGE_SIZE } from "@/utils/constants";
 import { isEmpty, uniqBy } from "lodash";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import RestaurantItem from "./RestaurantItem";
 import CategoryFilter from "./sections/CategoryFilter";
@@ -53,7 +53,7 @@ const RestaurantList = () => {
     }
   }, [data]);
 
-  useEffect(() => {
+  const setupIntersectionObserver = useCallback(() => {
     if (!hasNextPage) return;
 
     const observer = new IntersectionObserver(
@@ -74,6 +74,10 @@ const RestaurantList = () => {
       observer.disconnect();
     };
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+  useEffect(() => {
+    return setupIntersectionObserver();
+  }, [setupIntersectionObserver]);
 
   const handleRestaurantClick = (id: string) => {
     console.log(`Navigate to restaurant details page for ID: ${id}`);
@@ -124,7 +128,7 @@ const RestaurantList = () => {
       {isEmpty(restaurants) && <EmptyState />}
       <div
         className={cn(
-          "pb-4 h-[calc(100dvh-162px)] sm:h-[calc(100dvh-200px)]",
+          "h-[calc(100dvh-162px)] sm:h-[calc(100dvh-200px)]",
           isEmpty(restaurants) ? "hidden" : "flex"
         )}
       >
